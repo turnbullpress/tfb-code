@@ -1,0 +1,7 @@
+region = "us-east-1"
+environment = "consul"
+token = "40ededce-9358-11e6-9dd9-77ae5a61e9de"
+encryption_key = "YPzyhkz2LOvRi1sJZOEMbA=="
+key_name = "james"
+vpc_cidr = "10.0.0.0/16"
+public_subnet = "10.0.5.0/24"

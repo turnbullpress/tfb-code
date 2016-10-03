@@ -1,0 +1,37 @@
+digraph {
+	compound = "true"
+	newrank = "true"
+	subgraph "root" {
+		"[root] aws_elb.web" [label = "aws_elb.web", shape = "box"]
+		"[root] aws_instance.web" [label = "aws_instance.web", shape = "box"]
+		"[root] aws_security_group.web_host_sg" [label = "aws_security_group.web_host_sg", shape = "box"]
+		"[root] aws_security_group.web_inbound_sg" [label = "aws_security_group.web_inbound_sg", shape = "box"]
+		"[root] module.vpc.aws_internet_gateway.tfb" [label = "aws_internet_gateway.tfb", shape = "box"]
+		"[root] module.vpc.aws_route.internet_access" [label = "aws_route.internet_access", shape = "box"]
+		"[root] module.vpc.aws_subnet.public" [label = "aws_subnet.public", shape = "box"]
+		"[root] module.vpc.aws_vpc.tfb" [label = "aws_vpc.tfb", shape = "box"]
+		"[root] module.vpc.provider.aws" [label = "provider.aws", shape = "diamond"]
+		"[root] provider.aws" [label = "provider.aws", shape = "diamond"]
+		"[root] aws_elb.web" -> "[root] aws_instance.web"
+		"[root] aws_elb.web" -> "[root] aws_security_group.web_inbound_sg"
+		"[root] aws_elb.web" -> "[root] module.vpc.aws_subnet.public"
+		"[root] aws_elb.web" -> "[root] provider.aws"
+		"[root] aws_instance.web" -> "[root] aws_security_group.web_host_sg"
+		"[root] aws_instance.web" -> "[root] module.vpc.aws_subnet.public"
+		"[root] aws_instance.web" -> "[root] provider.aws"
+		"[root] aws_security_group.web_host_sg" -> "[root] module.vpc.aws_vpc.tfb"
+		"[root] aws_security_group.web_host_sg" -> "[root] provider.aws"
+		"[root] aws_security_group.web_inbound_sg" -> "[root] module.vpc.aws_vpc.tfb"
+		"[root] aws_security_group.web_inbound_sg" -> "[root] provider.aws"
+		"[root] module.vpc.aws_internet_gateway.tfb" -> "[root] module.vpc.aws_vpc.tfb"
+		"[root] module.vpc.aws_internet_gateway.tfb" -> "[root] module.vpc.provider.aws"
+		"[root] module.vpc.aws_route.internet_access" -> "[root] module.vpc.aws_internet_gateway.tfb"
+		"[root] module.vpc.aws_route.internet_access" -> "[root] module.vpc.aws_vpc.tfb"
+		"[root] module.vpc.aws_route.internet_access" -> "[root] module.vpc.provider.aws"
+		"[root] module.vpc.aws_subnet.public" -> "[root] module.vpc.aws_vpc.tfb"
+		"[root] module.vpc.aws_subnet.public" -> "[root] module.vpc.provider.aws"
+		"[root] module.vpc.aws_vpc.tfb" -> "[root] module.vpc.provider.aws"
+		"[root] module.vpc.provider.aws" -> "[root] provider.aws"
+	}
+}
+

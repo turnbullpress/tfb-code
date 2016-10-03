@@ -1,0 +1,28 @@
+#!/bin/bash
+
+type terraform >/dev/null 2>&1 || { echo >&2 "I require terraform but it's not installed. Quitting sadly."; exit 1; }
+
+REGION="us-east-1"
+PREFIX="examplecom"
+ENVIRONMENT=${PWD##*/}
+BUCKET="${PREFIX}-remote_state-${ENVIRONMENT}"
+STATE_FILE="terraform.tfstate"
+ARGS=$*
+
+remote() {
+  terraform remote config \
+    -backend=s3 \
+    -backend-config="region=${REGION}" \
+    -backend-config="bucket=${BUCKET}" \
+    -backend-config="key=${STATE_FILE}"
+}
+
+run() {
+  terraform $ARGS
+}
+
+if ! terraform remote pull; then
+  remote
+fi
+
+run
