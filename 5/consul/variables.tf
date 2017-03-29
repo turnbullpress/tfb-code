@@ -16,6 +16,10 @@ variable "key_name" {
   description = "The AWS key pair to use for resources."
 }
 
+variable "private_key_path" {
+  description = "The path to the AWS key pair to use for resources."
+}
+
 variable "vpc_cidr" {
   description = "The CIDR of the VPC."
 }
