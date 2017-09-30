@@ -10,7 +10,7 @@ provider "consul" {
 terraform {
   backend "s3" {
     region = "us-east-1"
-    bucket = "examplecom-remote_state-web"
+    bucket = "examplecom-remote-state-web"
     key    = "terraform.tfstate"
   }
 }
@@ -20,7 +20,7 @@ data "terraform_remote_state" "consul" {
 
   config {
     region = "${var.region}"
-    bucket = "examplecom-remote_state-consul"
+    bucket = "examplecom-remote-state-consul"
     key    = "terraform.tfstate"
   }
 }

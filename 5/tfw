@@ -5,7 +5,7 @@ type terraform >/dev/null 2>&1 || { echo >&2 "I require terraform but it's not i
 REGION="us-east-1"
 PREFIX="examplecom"
 ENVIRONMENT=${PWD##*/}
-BUCKET="${PREFIX}-remote_state-${ENVIRONMENT}"
+BUCKET="${PREFIX}-remote-state-${ENVIRONMENT}"
 STATE_FILE="terraform.tfstate"
 ARGS=$*
 
