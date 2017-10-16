@@ -43,7 +43,7 @@ resource "aws_elb" "web" {
   }
 
   # The instances are registered automatically
-  instances = "${aws_instance.web.*.id}"
+  instances = ["${aws_instance.web.*.id}"]
 }
 
 resource "aws_security_group" "web_inbound_sg" {
