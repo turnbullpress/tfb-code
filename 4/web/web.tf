@@ -69,7 +69,7 @@ resource "aws_elb" "web" {
     lb_protocol       = "http"
   }
 
-  instances = "${aws_instance.web.*.id}"
+  instances = ["${aws_instance.web.*.id}"]
 }
 
 resource "aws_security_group" "web_inbound_sg" {
