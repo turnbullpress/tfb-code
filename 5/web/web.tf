@@ -26,13 +26,13 @@ data "terraform_remote_state" "consul" {
 }
 
 module "remote_state" {
-  source      = "github.com:turnbullpress/tf_remote_state.git"
+  source      = "github.com/turnbullpress/tf_remote_state.git"
   prefix      = "${var.prefix}"
   environment = "${var.environment}"
 }
 
 module "vpc" {
-  source        = "github.com:turnbullpress/tf_vpc.git?ref=v0.0.1"
+  source        = "github.com/turnbullpress/tf_vpc.git?ref=v0.0.1"
   name          = "web"
   cidr          = "10.0.0.0/16"
   public_subnet = "10.0.1.0/24"
