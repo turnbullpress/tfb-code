@@ -14,7 +14,7 @@ variable "key_name" {
 
 variable "key_path" {
   description = "The location of the AWS key file to use for connections."
-  default     = "/Users/james/.ssh/james_aws"
+  default     = "/home/james/.ssh/james_aws"
 }
 
 variable "ami" {

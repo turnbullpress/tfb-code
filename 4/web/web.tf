@@ -52,7 +52,7 @@ resource "aws_instance" "web" {
 
   provisioner "remote-exec" {
     inline = [
-      "sudo mv /tmp/index.html /var/www/html/index.html",
+      "sudo mv /tmp/index.html /usr/share/nginx/html/index.html",
     ]
   }
 }

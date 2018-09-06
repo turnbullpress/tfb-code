@@ -9,8 +9,5 @@ sudo /opt/puppetlabs/bin/puppet module install puppetlabs-apt
 sudo mkdir -p /var/www/html
 cat >/tmp/nginx.pp << "EOF"
 class{'nginx': }
-nginx::resource::server{'www.example.com':
-    www_root => '/var/www/html/',
-}
 EOF
 sudo /opt/puppetlabs/bin/puppet apply /tmp/nginx.pp
