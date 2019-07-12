@@ -1,5 +1,6 @@
 variable "region" {
   description = "The AWS region."
+  default = "us-east-1"
 }
 
 variable "prefix" {
@@ -11,15 +12,3 @@ variable "environment" {
   description = "The environment name."
   default     = "base"
 }
-
-variable "ami" {
-  type        = map(string)
-  description = "The AMIs to launch."
-  default     = {}
-}
-
-variable "instance_type" {
-  description = "The type of instance to launch."
-  default     = "t1.micro"
-}
-

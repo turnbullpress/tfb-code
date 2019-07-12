@@ -1,48 +1,50 @@
 provider "aws" {
-  region = "${var.region}"
+  region = var.region
 }
 
-module "vpc" {
-  source        = "github.com/turnbullpress/tf_vpc.git?ref=v0.0.1"
+module "vpc_basic" {
+  source        = "github.com/turnbullpress/tf_vpc_basic.git?ref=v0.0.1"
   name          = "web"
   cidr          = "10.0.0.0/16"
   public_subnet = "10.0.1.0/24"
 }
 
 data "template_file" "index" {
-  count    = "${length(var.instance_ips)}"
-  template = "${file("files/index.html.tpl")}"
+  count    = length(var.instance_ips)
+  template = file("files/index.html.tpl")
 
-  vars {
+  vars = {
     hostname = "web-${format("%03d", count.index + 1)}"
   }
 }
 
 resource "aws_instance" "web" {
-  ami                         = "${lookup(var.ami, var.region)}"
-  instance_type               = "${var.instance_type}"
-  key_name                    = "${var.key_name}"
-  subnet_id                   = "${module.vpc.public_subnet_id}"
-  private_ip                  = "${var.instance_ips[count.index]}"
+  ami                         = var.ami[var.region]
+  instance_type               = var.instance_type
+  key_name                    = var.key_name
+  subnet_id                   = module.vpc_basic.public_subnet_id
+  private_ip                  = var.instance_ips[count.index]
   associate_public_ip_address = true
 
   vpc_security_group_ids = [
-    "${aws_security_group.web_host_sg.id}",
+    aws_security_group.web_host_sg.id,
   ]
 
-  tags {
+  tags = {
     Name = "web-${format("%03d", count.index + 1)}"
   }
 
-  count = "${length(var.instance_ips)}"
+  count = length(var.instance_ips)
 
   connection {
+    host        = coalesce(self.public_ip, self.private_ip)
+    type        = "ssh"
     user        = "ubuntu"
-    private_key = "${file(var.key_path)}"
+    private_key = file(var.key_path)
   }
 
   provisioner "file" {
-    content     = "${element(data.template_file.index.*.rendered, count.index)}"
+    content     = element(data.template_file.index[*].rendered, count.index)
     destination = "/tmp/index.html"
   }
 
@@ -58,9 +60,9 @@ resource "aws_instance" "web" {
 }
 
 resource "aws_elb" "web" {
-  name            = "web-elb"
-  subnets         = ["${module.vpc.public_subnet_id}"]
-  security_groups = ["${aws_security_group.web_inbound_sg.id}"]
+  name = "web-elb"
+  subnets         = [module.vpc_basic.public_subnet_id]
+  security_groups = [aws_security_group.web_inbound_sg.id]
 
   listener {
     instance_port     = 80
@@ -69,13 +71,13 @@ resource "aws_elb" "web" {
     lb_protocol       = "http"
   }
 
-  instances = ["${aws_instance.web.*.id}"]
+  instances = aws_instance.web[*].id
 }
 
 resource "aws_security_group" "web_inbound_sg" {
   name        = "web_inbound"
   description = "Allow HTTP from Anywhere"
-  vpc_id      = "${module.vpc.vpc_id}"
+  vpc_id      = module.vpc_basic.vpc_id
 
   ingress {
     from_port   = 80
@@ -102,7 +104,7 @@ resource "aws_security_group" "web_inbound_sg" {
 resource "aws_security_group" "web_host_sg" {
   name        = "web_host"
   description = "Allow SSH & HTTP to web hosts"
-  vpc_id      = "${module.vpc.vpc_id}"
+  vpc_id      = module.vpc_basic.vpc_id
 
   ingress {
     from_port   = 22
@@ -113,10 +115,10 @@ resource "aws_security_group" "web_host_sg" {
 
   # HTTP access from the VPC
   ingress {
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = ["${module.vpc.cidr}"]
+    from_port = 80
+    to_port   = 80
+    protocol  = "tcp"
+    cidr_blocks = [module.vpc_basic.cidr]
   }
 
   egress {
@@ -133,3 +135,4 @@ resource "aws_security_group" "web_host_sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 }
+

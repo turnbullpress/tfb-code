@@ -14,11 +14,11 @@ variable "key_name" {
 
 variable "key_path" {
   description = "The location of the AWS key file to use for connections."
-  default     = "/home/james/.ssh/james_aws"
+  default     = "/Users/james/.ssh/james_aws"
 }
 
 variable "ami" {
-  type        = "map"
+  type        = map(string)
   description = "A map of AMIs"
   default     = {}
 }
@@ -32,3 +32,4 @@ variable "instance_ips" {
   description = "The IPs to use for our instances"
   default     = ["10.0.1.20", "10.0.1.21"]
 }
+
