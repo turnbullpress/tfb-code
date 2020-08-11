@@ -18,7 +18,7 @@ terraform {
 data "terraform_remote_state" "consul" {
   backend = "s3"
 
-  config {
+  config = {
     region = var.region
     bucket = "examplecom-remote-state-consul"
     key    = "terraform.tfstate"
